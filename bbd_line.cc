@@ -67,6 +67,9 @@ void BBD_Line::process(unsigned n, float *inout, const float *clock)
     for (unsigned i = 0; i < n; ++i) {
         double fclk = clock[i];
 
+        for (unsigned m = 0; m < Mout; ++m)
+            Xout[m] = 0;
+
         if (fclk > 0) {
             double pclk_old = pclk;
             pclk += fclk;
