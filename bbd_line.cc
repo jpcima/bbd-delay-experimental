@@ -18,6 +18,7 @@ BBD_Line::BBD_Line(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BB
     unsigned Mout = fout.M;
     Xin_.reset(new cdouble[Min]);
     Xout_.reset(new cdouble[Mout]);
+    Xout_mem_.reset(new cdouble[Mout]);
     Gin_.reset(new cdouble[Min]);
     Gout_.reset(new cdouble[Mout]);
 
@@ -44,6 +45,7 @@ void BBD_Line::clear()
     unsigned Mout = fout_->M;
     std::fill(&Xin_[0], &Xin_[Min], 0);
     std::fill(&Xout_[0], &Xout_[Mout], 0);
+    std::fill(&Xout_mem_[0], &Xout_mem_[Mout], 0);
 }
 
 void BBD_Line::process(unsigned n, float *inout, const float *clock)
@@ -58,6 +60,7 @@ void BBD_Line::process(unsigned n, float *inout, const float *clock)
     const BBD_Filter_Coef &fin = *fin_, &fout = *fout_;
     unsigned Min = fin.M, Mout = fout.M;
     cdouble *Xin = Xin_.get(), *Xout = Xout_.get();
+    cdouble *Xout_mem = Xout_mem_.get();
     cdouble *Gin = Gin_.get(), *Gout = Gout_.get();
     const cdouble *Pin = fin.P.get(), *Pout = fout.P.get();
 
@@ -97,9 +100,9 @@ void BBD_Line::process(unsigned n, float *inout, const float *clock)
 
         cdouble y = fout.H * ybbd_old;
         for (unsigned m = 0; m < Mout; ++m) {
-            cdouble xout = Xout[m];
+            cdouble xout = Pout[m] * Xout_mem[m] + Xout[m];
+            Xout_mem[m] = xout;
             y += xout;
-            Xout[m] = xout * Pout[m];
         }
 
         inout[i] = y.real();

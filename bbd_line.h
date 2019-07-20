@@ -28,6 +28,7 @@ private:
     const BBD_Filter_Coef *fout_;
     std::unique_ptr<cdouble[]> Xin_;
     std::unique_ptr<cdouble[]> Xout_;
+    std::unique_ptr<cdouble[]> Xout_mem_; // sample memory of output filter
     std::unique_ptr<cdouble[]> Gin_;
     std::unique_ptr<cdouble[]> Gout_;
 };
