@@ -4,7 +4,6 @@
 #include <vector>
 #include <memory>
 #include <complex>
-typedef std::complex<double> cdouble;
 
 class BBD_Line {
 public:
@@ -26,9 +25,13 @@ private:
     double ybbd_old_;
     const BBD_Filter_Coef *fin_;
     const BBD_Filter_Coef *fout_;
-    std::unique_ptr<cdouble[]> Xin_;
-    std::unique_ptr<cdouble[]> Xout_;
-    std::unique_ptr<cdouble[]> Xout_mem_; // sample memory of output filter
-    std::unique_ptr<cdouble[]> Gin_;
-    std::unique_ptr<cdouble[]> Gout_;
+    std::unique_ptr<double[]> Xin_; // sample from input filter
+    std::unique_ptr<double[]> Xout0_; // 1st sample to output filter
+    std::unique_ptr<double[]> Xout1_; // 2nd sample to output filter
+    std::unique_ptr<double[]> Z1in_; // 1st sample memory of input filter
+    std::unique_ptr<double[]> Z2in_; // 2nd sample memory of input filter
+    std::unique_ptr<double[]> Z1out_; // 1st sample memory of output filter
+    std::unique_ptr<double[]> Z2out_; // 2nd sample memory of output filter
+    std::unique_ptr<double[]> B0_; // temporary buffer in which b0 coefficients are interpolated
+    std::unique_ptr<double[]> B1_; // temporary buffer in which b1 coefficients are interpolated
 };

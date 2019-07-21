@@ -3,6 +3,11 @@
 #include <complex>
 typedef std::complex<double> cdouble;
 
+enum class BBD_Filter_Kind : bool {
+    Input,
+    Output,
+};
+
 /*
   Analog specifications of BBD filters, input and output.
   M=order R=numerator P=denominator
@@ -10,6 +15,7 @@ typedef std::complex<double> cdouble;
 */
 
 struct BBD_Filter_Spec {
+    BBD_Filter_Kind Kind;
     unsigned M;
     const cdouble *R;/*[M]*/
     const cdouble *P;/*[M]*/
@@ -22,12 +28,26 @@ struct BBD_Filter_Spec {
 struct BBD_Filter_Coef {
     unsigned M;
     unsigned N;
+
+    // complex-valued coefficients
     std::unique_ptr<cdouble[]> G;/*[M*N]*/
     std::unique_ptr<cdouble[]> P;/*[M]*/
+
     double H;
+
     //
     void interpolate_G(double d, cdouble *g/*[M]*/) const noexcept;
-    void interpolate_P(double d, cdouble *p/*[M]*/) const noexcept;
+
+    // real-valued coefficients
+    unsigned RealM;/*(M+1)/2*/
+    std::unique_ptr<double[]> A1;/*[RealM]*/
+    std::unique_ptr<double[]> A2;/*[RealM]*/
+    std::unique_ptr<double[]> B0;/*[RealM*N]*/
+    std::unique_ptr<double[]> B1;/*[RealM*N]*/
+
+    //
+    void interpolate_B0(double d, double *b0/*[M]*/) const noexcept;
+    void interpolate_B1(double d, double *b1/*[M]*/) const noexcept;
 };
 
 namespace BBD {
