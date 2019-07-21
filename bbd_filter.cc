@@ -44,8 +44,16 @@ BBD_Filter_Coef BBD::compute_filter(float fs, unsigned steps, const BBD_Filter_S
     for (unsigned step = 0; step < steps; ++step)  {
         double d = (double)step / (steps - 1);
         cdouble *gm = &coef.G[step * M];
-        for (unsigned m = 0; m < M; ++m)
-            gm[m] = ts * spec.R[m] * std::pow(pm[m], d);
+        switch (spec.kind) {
+        case BBD_Filter_Kind::Input:
+            for (unsigned m = 0; m < M; ++m)
+                gm[m] = ts * spec.R[m] * std::pow(pm[m], d);
+            break;
+        case BBD_Filter_Kind::Output:
+            for (unsigned m = 0; m < M; ++m)
+                gm[m] = (spec.R[m] / spec.P[m]) * std::pow(pm[m], 1 - d);
+            break;
+        }
     }
 
     cdouble H = 0;
@@ -107,5 +115,5 @@ static constexpr cdouble R_out[M_out] = {{5092, 0}, {11256, -99566}, {11256, 995
 static constexpr cdouble P_out[M_out] = {{-176261, 0}, {-51468, 21437}, {-51468, -21437}, {-26276, -59699}, {-26276, 59699}};
 } // namespace j60
 
-const BBD_Filter_Spec bbd_fin_j60 = {j60::M_in, j60::R_in, j60::P_in};
-const BBD_Filter_Spec bbd_fout_j60 = {j60::M_out, j60::R_out, j60::P_out};
+const BBD_Filter_Spec bbd_fin_j60 = {BBD_Filter_Kind::Input, j60::M_in, j60::R_in, j60::P_in};
+const BBD_Filter_Spec bbd_fout_j60 = {BBD_Filter_Kind::Output, j60::M_out, j60::R_out, j60::P_out};

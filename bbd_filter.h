@@ -3,6 +3,11 @@
 #include <complex>
 typedef std::complex<double> cdouble;
 
+enum class BBD_Filter_Kind {
+    Input,
+    Output,
+};
+
 /*
   Analog specifications of BBD filters, input and output.
   M=order R=numerator P=denominator
@@ -10,6 +15,7 @@ typedef std::complex<double> cdouble;
 */
 
 struct BBD_Filter_Spec {
+    BBD_Filter_Kind kind;
     unsigned M;
     const cdouble *R;/*[M]*/
     const cdouble *P;/*[M]*/
