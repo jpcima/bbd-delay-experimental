@@ -21,11 +21,6 @@ void BBD_Filter_Coef::interpolate_G(double d, cdouble *g/*[M]*/) const noexcept
     interpolate_row(d, N, M, G.get(), g);
 }
 
-void BBD_Filter_Coef::interpolate_P(double d, cdouble *p/*[M]*/) const noexcept
-{
-    interpolate_row(d, N, M, P.get(), p);
-}
-
 BBD_Filter_Coef BBD::compute_filter(float fs, unsigned steps, const BBD_Filter_Spec &spec)
 {
     BBD_Filter_Coef coef;

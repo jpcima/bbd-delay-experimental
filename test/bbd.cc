@@ -89,11 +89,10 @@ int main(int argc, char *argv[])
     std::unique_ptr<float[]> clock(new float[ns]);
 
     for (unsigned i = 0; i < ns; ++i) {
-        output[i] = input[i];
         clock[i] = fbbd / fs;
     }
 
-    line.process(ns, output.get(), clock.get());
+    line.process(ns, input.data(), output.get(), clock.get());
 
     //
     if (!output_path) {

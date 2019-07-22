@@ -48,7 +48,7 @@ void BBD_Line::clear()
     std::fill(&Xout_mem_[0], &Xout_mem_[Mout], 0);
 }
 
-void BBD_Line::process(unsigned n, float *inout, const float *clock)
+void BBD_Line::process(unsigned n, const float *input, float *output, const float *clock)
 {
     unsigned ns = ns_;
     float *mem = mem_.data();
@@ -99,7 +99,7 @@ void BBD_Line::process(unsigned n, float *inout, const float *clock)
         }
 
         for (unsigned m = 0; m < Min; ++m)
-            Xin[m] = Pin[m] * Xin[m] + cdouble(inout[i]);
+            Xin[m] = Pin[m] * Xin[m] + cdouble(input[i]);
 
         cdouble y = fout.H * ybbd_old;
         for (unsigned m = 0; m < Mout; ++m) {
@@ -108,11 +108,16 @@ void BBD_Line::process(unsigned n, float *inout, const float *clock)
             y += xout;
         }
 
-        inout[i] = y.real();
+        output[i] = y.real();
     }
 
     imem_ = imem;
     pclk_ = pclk;
     ptick_ = ptick;
     ybbd_old_ = ybbd_old;
+}
+
+void BBD_Line::process(unsigned n, float *inout, const float *clock)
+{
+    process(n, inout, inout, clock);
 }

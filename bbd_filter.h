@@ -33,7 +33,6 @@ struct BBD_Filter_Coef {
     double H;
     //
     void interpolate_G(double d, cdouble *g/*[M]*/) const noexcept;
-    void interpolate_P(double d, cdouble *p/*[M]*/) const noexcept;
 };
 
 namespace BBD {

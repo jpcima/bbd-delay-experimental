@@ -11,6 +11,7 @@ public:
     explicit BBD_Line(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BBD_Filter_Spec &fsout);
     void set_delay_size(unsigned ns);
     void clear();
+    void process(unsigned n, const float *input, float *output, const float *clock);
     void process(unsigned n, float *inout, const float *clock);
 
     const BBD_Filter_Coef &filter_in() const noexcept { return *fin_; }
