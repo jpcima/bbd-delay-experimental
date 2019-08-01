@@ -2,7 +2,18 @@
 #include <vector>
 #include <mutex>
 #include <algorithm>
+#include <cmath>
 #include <cassert>
+
+cdouble BBD_Filter_Spec::transfer(double frequency) const noexcept
+{
+    cdouble j(0.0, 1.0);
+    cdouble s = j * (2.0 * M_PI) * frequency;
+    cdouble h = 0.0;
+    for (unsigned i = 0; i < M; ++i)
+        h += R[i] / (s - P[i]);
+    return h;
+}
 
 template <class T>
 static void interpolate_row(double d, unsigned rows, unsigned cols, const T *src, T *dst)
@@ -104,7 +115,7 @@ void BBD::clear_filter_cache()
 namespace j60 {
 static constexpr unsigned M_in = 5;
 static constexpr cdouble R_in[M_in] = {{251589, 0}, {-130428, -4165}, {-130428, 4165}, {4634, -22873}, {4634, 22873}};
-static constexpr cdouble P_in[M_in] = {{-46580, 0}, {-55482, 25082}, {-55482, -25082}, {-26929, -59437}, {-26929, 59437}};
+static constexpr cdouble P_in[M_in] = {{-46580, 0}, {-55482, 25082}, {-55482, -25082}, {-26292, -59437}, {-26292, 59437}};
 static constexpr unsigned M_out = 5;
 static constexpr cdouble R_out[M_out] = {{5092, 0}, {11256, -99566}, {11256, 99566}, {-13802, -24606}, {-13802, 24606}};
 static constexpr cdouble P_out[M_out] = {{-176261, 0}, {-51468, 21437}, {-51468, -21437}, {-26276, -59699}, {-26276, 59699}};

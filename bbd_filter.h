@@ -19,6 +19,8 @@ struct BBD_Filter_Spec {
     unsigned M;
     const cdouble *R;/*[M]*/
     const cdouble *P;/*[M]*/
+    //
+    cdouble transfer(double frequency) const noexcept;
 };
 
 /*
