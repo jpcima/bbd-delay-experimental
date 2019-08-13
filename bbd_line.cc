@@ -4,8 +4,7 @@
 
 static unsigned interp_size = 128;
 
-BBD_Line::BBD_Line(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BBD_Filter_Spec &fsout)
-    : fs_(fs)
+void BBD_Line::setup(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BBD_Filter_Spec &fsout)
 {
     mem_.reserve(8192);
 

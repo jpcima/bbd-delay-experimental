@@ -8,7 +8,7 @@ typedef std::complex<double> cdouble;
 
 class BBD_Line {
 public:
-    explicit BBD_Line(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BBD_Filter_Spec &fsout);
+    void setup(double fs, unsigned ns, const BBD_Filter_Spec &fsin, const BBD_Filter_Spec &fsout);
     void set_delay_size(unsigned ns);
     void clear();
     void process(unsigned n, const float *input, float *output, const float *clock);
@@ -17,8 +17,12 @@ public:
     const BBD_Filter_Coef &filter_in() const noexcept { return *fin_; }
     const BBD_Filter_Coef &filter_out() const noexcept { return *fout_; }
 
+    static inline double hz_rate_for_delay(double delay_time, unsigned stages)
+        { return 2 * stages / delay_time; }
+    static inline double delay_for_hz_rate(double rate, unsigned stages)
+        { return 2 * stages / rate; }
+
 private:
-    const double fs_; // sampling frequency
     unsigned ns_; // delay size
     std::vector<float> mem_; // delay memory
     unsigned imem_; // delay memory index
